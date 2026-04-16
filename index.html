@@ -1070,6 +1070,7 @@ async function saveItem() {
     const payload = { action, ...item, photos: JSON.stringify(item.photos) };
     await apiCall(payload);
     closeModal();
+    await new Promise(r => setTimeout(r, 1000));
     await loadItems();
   } catch(e) {
     showError('Save failed: ' + e.message);

@@ -828,8 +828,11 @@ function showSetupBanner() {
 
 // ─── API ─────────────────────────────────────────────────────
 async function apiCall(params) {
-  const url = SHEET_URL + '?' + new URLSearchParams(params);
-  const res = await fetch(url);
+  const res = await fetch(SHEET_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(params),
+  });
   const json = await res.json();
   if (!json.ok) throw new Error(json.error || 'API error');
   return json;
@@ -1066,8 +1069,8 @@ async function saveItem() {
     delete item._isNew;
     const payload = { action, ...item, photos: JSON.stringify(item.photos) };
     await apiCall(payload);
-    await loadItems();
     closeModal();
+    await loadItems();
   } catch(e) {
     showError('Save failed: ' + e.message);
   } finally {

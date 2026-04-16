@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lost Item Log — Cozyheim Hostel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500&family=Noto+Sans+Myanmar:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: #D8D2C7;
+    --border2: #C4BDB0;
+    --text: #1A1714;
+    --text2: #6B6560;
+    --text3: #A09890;
+    --accent: #2D6A4F;
+    --accent-bg: #E8F5EE;
+    --accent2: #C17D35;
+    --accent2-bg: #FBF0E0;
+    --red: #C0392B;
+    --red-bg: #FDECEA;
+    --blue: #1A5276;
+    --blue-bg: #EAF2F8;
+    --mono: 'IBM Plex Mono', monospace;
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Mono', 'Noto Sans Thai', 'Noto Sans Myanmar', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  /* LANG SELECTOR */
+  .lang-selector {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 2px;
+  }
+  .lang-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+    font-family: inherit;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .lang-btn.active {
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 500;
+  }
+  .lang-btn:hover:not(.active) { color: white; }
+
+  /* MAIN */
+  .main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+  /* HEADER */
+  .header { margin-bottom: 24px; }
+  .header h1 { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+  .header-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-val { font-size: 24px; font-weight: 500; margin-top: 2px; }
+  .stat-val.blue { color: var(--blue); }
+  .stat-val.green { color: var(--accent); }
+  .stat-val.orange { color: var(--accent2); }
+  .stat-val.red { color: var(--red); }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn-primary {
+    padding: 8px 16px;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary:hover { opacity: 0.8; }
+  .btn-outline {
+    padding: 7px 14px;
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-outline:hover { background: var(--surface2); }
+  .filter-select {
+    padding: 7px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .search-input {
+    padding: 7px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text);
+    width: 180px;
+  }
+  .search-input:focus, .filter-select:focus { outline: none; border-color: var(--text); }
+  .spacer { flex: 1; }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 700px; }
+  thead tr { background: var(--surface2); }
+  th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 0.5px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: middle;
+    font-size: 12px;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background 0.1s; }
+  tbody tr:hover { background: var(--surface2); }
+
+  .id-cell { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+  /* STATUS BADGE */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .badge-holding { background: var(--blue-bg); color: var(--blue); }
+  .badge-returned { background: var(--accent-bg); color: var(--accent); }
+  .badge-investigating { background: var(--accent2-bg); color: var(--accent2); }
+  .badge-disposed { background: var(--surface2); color: var(--text2); }
+
+  /* PHOTO THUMB */
+  .photo-thumb {
+    width: 36px; height: 36px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 0.5px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .photo-thumb:hover { transform: scale(1.05); }
+  .no-photo {
+    width: 36px; height: 36px;
+    border-radius: 4px;
+    border: 0.5px dashed var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text3); font-size: 14px;
+    cursor: pointer;
+  }
+  .no-photo:hover { border-color: var(--text2); color: var(--text2); }
+
+  /* ACTION BTNS */
+  .action-cell { display: flex; gap: 4px; }
+  .btn-sm {
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: inherit;
+    border: 0.5px solid var(--border);
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.1s;
+  }
+  .btn-sm:hover { border-color: var(--text); color: var(--text); background: var(--surface2); }
+  .btn-sm.danger:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text3);
+  }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-text { font-size: 13px; }
+
+  /* MODAL OVERLAY */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,23,20,0.6);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(8px);
+    transition: transform 0.2s;
+    border: 0.5px solid var(--border);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    padding: 20px 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title { font-size: 15px; font-weight: 500; }
+  .modal-close {
+    width: 28px; height: 28px;
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: var(--surface2); color: var(--text); }
+
+  .modal-body { padding: 20px 24px 24px; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+  .form-input, .form-select, .form-textarea {
+    padding: 8px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text);
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--text);
+    background: var(--surface);
+  }
+  .form-textarea { resize: vertical; min-height: 64px; }
+
+  /* PHOTO UPLOAD */
+  .photo-upload-area {
+    border: 1.5px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg);
+    position: relative;
+  }
+  .photo-upload-area:hover, .photo-upload-area.dragover {
+    border-color: var(--text);
+    background: var(--surface2);
+  }
+  .photo-upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-icon { font-size: 24px; margin-bottom: 6px; }
+  .upload-text { font-size: 11px; color: var(--text2); }
+
+  .photo-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .photo-preview-wrap {
+    position: relative;
+    width: 64px; height: 64px;
+  }
+  .photo-preview-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 0.5px solid var(--border);
+  }
+  .photo-remove {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 16px; height: 16px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 9px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .modal-footer {
+    padding: 0 24px 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    cursor: zoom-out;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .lightbox.open { opacity: 1; pointer-events: all; }
+  .lightbox img {
+    max-width: 90vw; max-height: 90vh;
+    border-radius: 4px;
+    object-fit: contain;
+  }
+
+  /* DAYS COUNTER */
+  .days-old {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+  }
+  .days-warn { background: var(--accent2-bg); color: var(--accent2); }
+  .days-danger { background: var(--red-bg); color: var(--red); }
+  .days-ok { background: var(--surface2); color: var(--text3); }
+
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .search-input { width: 120px; }
+    h1 { font-size: 16px; }
+  }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">🏨 Cozyheim Hostel · Lost Items</div>
+  <div class="topbar-right">
+    <div class="lang-selector">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('th')">TH</button>
+      <button class="lang-btn" onclick="setLang('ko')">KO</button>
+      <button class="lang-btn" onclick="setLang('my')">MY</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING BAR -->
+<div id="loadingBar" style="display:none;height:3px;background:linear-gradient(90deg,#2D6A4F,#C17D35);position:sticky;top:48px;z-index:99;animation:loadpulse 1s infinite alternate;">
+</div>
+<style>@keyframes loadpulse{from{opacity:0.5}to{opacity:1}}</style>
+
+<!-- ERROR MSG -->
+<div id="errorMsg" style="display:none;background:#FDECEA;color:#C0392B;font-size:12px;padding:8px 20px;text-align:center;border-bottom:0.5px solid #f5c6c6;"></div>
+
+<!-- SETUP BANNER -->
+<div id="setupBanner" style="display:none;background:#FBF0E0;border-bottom:0.5px solid #e8c98a;padding:10px 20px;font-size:12px;color:#633806;">
+  ⚠️ <strong>Demo mode</strong> — data is local only. Paste your Apps Script URL in <code>SHEET_URL</code> to enable Google Sheets sync.
+  <a href="https://github.com" target="_blank" style="color:#1A5276;margin-left:8px;">Setup guide →</a>
+</div>
+
+<div class="main">
+  <div class="header">
+    <h1 data-t="title">Lost Item Log</h1>
+    <div class="header-sub" data-t="subtitle">Cozyheim Hostel Bangkok · Yaowarat</div>
+  </div>
+
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="toolbar">
+    <button class="btn-primary" onclick="openAddModal()">
+      <span>+</span> <span data-t="addItem">Add Item</span>
+    </button>
+    <select class="filter-select" id="filterStatus" onchange="renderTable()">
+      <option value="">All</option>
+    </select>
+    <select class="filter-select" id="filterLocation" onchange="renderTable()">
+      <option value="">All Locations</option>
+    </select>
+    <span class="spacer"></span>
+    <input class="search-input" type="text" id="searchInput" placeholder="Search..." oninput="renderTable()">
+    <button class="btn-outline" onclick="exportCSV()" data-t="export">Export CSV</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add Lost Item</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" data-t="foundDate">Found Date</label>
+          <input class="form-input" type="date" id="fDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="status">Status</label>
+          <select class="form-select" id="fStatus"></select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-t="itemDesc">Item Description</label>
+          <input class="form-input" type="text" id="fDesc" placeholder="">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="brandColor">Brand / Color</label>
+          <input class="form-input" type="text" id="fBrand">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="location">Found Location</label>
+          <select class="form-select" id="fLocation">
+            <option value="6F Dorm">6F Dorm</option>
+            <option value="8F Dorm">8F Dorm</option>
+            <option value="Lobby">Lobby</option>
+            <option value="Rooftop">Rooftop</option>
+            <option value="Bathroom">Bathroom</option>
+            <option value="Corridor">Corridor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="storageLocation">Storage Location</label>
+          <input class="form-input" type="text" id="fStorage" placeholder="Box A / Locker">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="foundBy">Found By (Staff)</label>
+          <input class="form-input" type="text" id="fStaff">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="guestContact">Guest Contact</label>
+          <select class="form-select" id="fContact">
+            <option value="none" data-t-opt="notContacted">Not Contacted</option>
+            <option value="sent" data-t-opt="messageSent">Message Sent</option>
+            <option value="done" data-t-opt="completed">Completed</option>
+            <option value="unreachable" data-t-opt="unreachable">Unreachable</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="resolvedDate">Resolved Date</label>
+          <input class="form-input" type="date" id="fResolved">
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-t="notes">Notes / Booking Ref</label>
+          <textarea class="form-textarea" id="fNotes"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-t="photos">Photos</label>
+          <div class="photo-upload-area" id="uploadArea" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+            <input type="file" accept="image/*" multiple onchange="handleFiles(event)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text" data-t="uploadHint">Click or drag photos here</div>
+          </div>
+          <div class="photo-previews" id="photoPreviews"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()" data-t="cancel">Cancel</button>
+      <button class="btn-primary" onclick="saveItem()" data-t="save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+// ─── TRANSLATIONS ────────────────────────────────────────────
+const I18N = {
+  en: {
+    title: "Lost Item Log",
+    subtitle: "Cozyheim Hostel Bangkok · Yaowarat",
+    addItem: "Add Item",
+    export: "Export CSV",
+    foundDate: "Found Date",
+    status: "Status",
+    itemDesc: "Item Description",
+    brandColor: "Brand / Color",
+    location: "Found Location",
+    storageLocation: "Storage Location",
+    foundBy: "Found By (Staff)",
+    guestContact: "Guest Contact",
+    resolvedDate: "Resolved Date",
+    notes: "Notes / Booking Ref",
+    photos: "Photos",
+    uploadHint: "Click or drag photos here",
+    cancel: "Cancel",
+    save: "Save",
+    edit: "Edit",
+    delete: "Del",
+    noItems: "No items found",
+    statHolding: "Holding",
+    statReturned: "Returned",
+    statInvestigating: "Investigating",
+    statDisposed: "Disposed",
+    days: "d",
+    colId: "ID",
+    colDate: "Date",
+    colItem: "Item",
+    colLocation: "Location",
+    colStaff: "Staff",
+    colStatus: "Status",
+    colDays: "Days",
+    colPhoto: "Photo",
+    colAction: "Action",
+    statusHolding: "Holding",
+    statusReturned: "Returned",
+    statusInvestigating: "Investigating",
+    statusDisposed: "Disposed",
+    notContacted: "Not Contacted",
+    messageSent: "Message Sent",
+    completed: "Completed",
+    unreachable: "Unreachable",
+    filterStatus: "All Status",
+    filterLocation: "All Locations",
+  },
+  th: {
+    title: "บันทึกของหาย",
+    subtitle: "Cozyheim Hostel Bangkok · เยาวราช",
+    addItem: "เพิ่มรายการ",
+    export: "ส่งออก CSV",
+    foundDate: "วันที่พบ",
+    status: "สถานะ",
+    itemDesc: "รายละเอียดสิ่งของ",
+    brandColor: "ยี่ห้อ / สี",
+    location: "สถานที่พบ",
+    storageLocation: "ที่เก็บ",
+    foundBy: "พนักงานที่พบ",
+    guestContact: "ติดต่อแขก",
+    resolvedDate: "วันที่แก้ไข",
+    notes: "หมายเหตุ / เลขที่จอง",
+    photos: "รูปภาพ",
+    uploadHint: "คลิกหรือลากรูปภาพมาวางที่นี่",
+    cancel: "ยกเลิก",
+    save: "บันทึก",
+    edit: "แก้ไข",
+    delete: "ลบ",
+    noItems: "ไม่พบรายการ",
+    statHolding: "เก็บรักษา",
+    statReturned: "คืนแล้ว",
+    statInvestigating: "กำลังตรวจสอบ",
+    statDisposed: "ทิ้งแล้ว",
+    days: "วัน",
+    colId: "รหัส",
+    colDate: "วันที่",
+    colItem: "สิ่งของ",
+    colLocation: "สถานที่",
+    colStaff: "พนักงาน",
+    colStatus: "สถานะ",
+    colDays: "วัน",
+    colPhoto: "รูป",
+    colAction: "จัดการ",
+    statusHolding: "เก็บรักษา",
+    statusReturned: "คืนแล้ว",
+    statusInvestigating: "กำลังตรวจสอบ",
+    statusDisposed: "ทิ้งแล้ว",
+    notContacted: "ยังไม่ติดต่อ",
+    messageSent: "ส่งข้อความแล้ว",
+    completed: "เสร็จสิ้น",
+    unreachable: "ติดต่อไม่ได้",
+    filterStatus: "ทุกสถานะ",
+    filterLocation: "ทุกสถานที่",
+  },
+  ko: {
+    title: "분실물 관리 대장",
+    subtitle: "Cozyheim 호스텔 방콕 · 야오와랏",
+    addItem: "항목 추가",
+    export: "CSV 내보내기",
+    foundDate: "발견일",
+    status: "상태",
+    itemDesc: "물품 설명",
+    brandColor: "브랜드 / 색상",
+    location: "발견 위치",
+    storageLocation: "보관 위치",
+    foundBy: "발견자(스탭)",
+    guestContact: "게스트 연락",
+    resolvedDate: "처리일",
+    notes: "비고 / 예약 번호",
+    photos: "사진",
+    uploadHint: "클릭하거나 사진을 여기로 드래그",
+    cancel: "취소",
+    save: "저장",
+    edit: "수정",
+    delete: "삭제",
+    noItems: "항목 없음",
+    statHolding: "보관중",
+    statReturned: "반환완료",
+    statInvestigating: "확인중",
+    statDisposed: "폐기",
+    days: "일",
+    colId: "ID",
+    colDate: "날짜",
+    colItem: "물품",
+    colLocation: "위치",
+    colStaff: "스탭",
+    colStatus: "상태",
+    colDays: "경과",
+    colPhoto: "사진",
+    colAction: "처리",
+    statusHolding: "보관중",
+    statusReturned: "반환완료",
+    statusInvestigating: "확인중",
+    statusDisposed: "폐기",
+    notContacted: "미연락",
+    messageSent: "메시지 발송",
+    completed: "완료",
+    unreachable: "연락 불가",
+    filterStatus: "전체 상태",
+    filterLocation: "전체 위치",
+  },
+  my: {
+    title: "ပစ္စည်းပျောက်ဆုံးမှတ်တမ်း",
+    subtitle: "Cozyheim Hostel ဘန်ကောက် · ယော်ဝါးရပ်",
+    addItem: "ထည့်မည်",
+    export: "CSV ထုတ်မည်",
+    foundDate: "တွေ့ရှိသောနေ့",
+    status: "အခြေအနေ",
+    itemDesc: "ပစ္စည်းဖော်ပြချက်",
+    brandColor: "အမှတ်တံဆိပ် / အရောင်",
+    location: "တွေ့ရှိသောနေရာ",
+    storageLocation: "သိမ်းဆည်းသောနေရာ",
+    foundBy: "တွေ့ရှိသောဝန်ထမ်း",
+    guestContact: "ဧည့်သည်ဆက်သွယ်မှု",
+    resolvedDate: "ဖြေရှင်းသောနေ့",
+    notes: "မှတ်ချက် / ဘွတ်ကင်နံပါတ်",
+    photos: "ဓါတ်ပုံများ",
+    uploadHint: "ဓါတ်ပုံများကို ဤနေရာသို့ ဆွဲချပါ",
+    cancel: "မလုပ်တော့",
+    save: "သိမ်းမည်",
+    edit: "ပြင်မည်",
+    delete: "ဖျက်မည်",
+    noItems: "မှတ်တမ်းမရှိပါ",
+    statHolding: "သိမ်းဆည်းဆဲ",
+    statReturned: "ပြန်ပေးပြီ",
+    statInvestigating: "စစ်ဆေးဆဲ",
+    statDisposed: "ဖျက်ဆီးပြီ",
+    days: "ရက်",
+    colId: "ID",
+    colDate: "နေ့ရက်",
+    colItem: "ပစ္စည်း",
+    colLocation: "နေရာ",
+    colStaff: "ဝန်ထမ်း",
+    colStatus: "အခြေအနေ",
+    colDays: "ရက်",
+    colPhoto: "ဓါတ်ပုံ",
+    colAction: "လုပ်ဆောင်မှု",
+    statusHolding: "သိမ်းဆည်းဆဲ",
+    statusReturned: "ပြန်ပေးပြီ",
+    statusInvestigating: "စစ်ဆေးဆဲ",
+    statusDisposed: "ဖျက်ဆီးပြီ",
+    notContacted: "မဆက်သွယ်ရသေး",
+    messageSent: "မက်ဆေ့ပို့ပြီ",
+    completed: "ပြီးစီးပြီ",
+    unreachable: "ဆက်သွယ်မရ",
+    filterStatus: "အခြေအနေအားလုံး",
+    filterLocation: "နေရာအားလုံး",
+  }
+};
+
+// ─── CONFIG — paste your Apps Script Web App URL here ────────
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjEYmWOR6COaGbCwSO-rbiV7oej0DY7eE3Lrhe7NLVLEW5HnA5AkPUPPq8hDuA6A7x/exec';
+
+// ─── STATE ───────────────────────────────────────────────────
+let lang = 'en';
+let items = [];
+let editId = null;
+let pendingPhotos = [];
+let isLoading = false;
+
+function t(key) { return I18N[lang][key] || key; }
+
+// ─── LANG ────────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  applyTranslations();
+  renderAll();
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    el.textContent = t(key);
+  });
+}
+
+// ─── LOADING UI ──────────────────────────────────────────────
+function setLoading(on) {
+  isLoading = on;
+  const el = document.getElementById('loadingBar');
+  if (el) el.style.display = on ? 'block' : 'none';
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+function showSetupBanner() {
+  document.getElementById('setupBanner').style.display = 'block';
+}
+
+// ─── API ─────────────────────────────────────────────────────
+async function apiCall(params) {
+  const url = SHEET_URL + '?' + new URLSearchParams(params);
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'API error');
+  return json;
+}
+
+async function loadItems() {
+  if (SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    showSetupBanner();
+    items = getSampleData();
+    renderAll();
+    return;
+  }
+  try {
+    setLoading(true);
+    const data = await apiCall({ action: 'getAll' });
+    items = data.items || [];
+    renderAll();
+  } catch(e) {
+    showError('Load failed: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ─── RENDER ALL ──────────────────────────────────────────────
+function renderAll() {
+  renderStats();
+  renderTable();
+  renderFilters();
+  renderModalForm();
+}
+
+function renderStats() {
+  const holding = items.filter(i => i.status === 'holding').length;
+  const returned = items.filter(i => i.status === 'returned').length;
+  const investigating = items.filter(i => i.status === 'investigating').length;
+  const disposed = items.filter(i => i.status === 'disposed').length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-label">${t('statHolding')}</div><div class="stat-val blue">${holding}</div></div>
+    <div class="stat-card"><div class="stat-label">${t('statInvestigating')}</div><div class="stat-val orange">${investigating}</div></div>
+    <div class="stat-card"><div class="stat-label">${t('statReturned')}</div><div class="stat-val green">${returned}</div></div>
+    <div class="stat-card"><div class="stat-label">${t('statDisposed')}</div><div class="stat-val" style="color:var(--text2)">${disposed}</div></div>
+  `;
+}
+
+function renderFilters() {
+  const statusSel = document.getElementById('filterStatus');
+  const curStatus = statusSel.value;
+  statusSel.innerHTML = `<option value="">${t('filterStatus')}</option>
+    <option value="holding">${t('statusHolding')}</option>
+    <option value="returned">${t('statusReturned')}</option>
+    <option value="investigating">${t('statusInvestigating')}</option>
+    <option value="disposed">${t('statusDisposed')}</option>`;
+  statusSel.value = curStatus;
+
+  const locations = [...new Set(items.map(i => i.location).filter(Boolean))];
+  const locSel = document.getElementById('filterLocation');
+  const curLoc = locSel.value;
+  locSel.innerHTML = `<option value="">${t('filterLocation')}</option>` +
+    locations.map(l => `<option value="${l}">${l}</option>`).join('');
+  locSel.value = curLoc;
+}
+
+function renderTable() {
+  const filterStatus = document.getElementById('filterStatus').value;
+  const filterLocation = document.getElementById('filterLocation').value;
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+
+  let filtered = items.filter(item => {
+    if (filterStatus && item.status !== filterStatus) return false;
+    if (filterLocation && item.location !== filterLocation) return false;
+    if (search) {
+      const hay = [item.desc, item.brand, item.location, item.staff, item.notes].join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  }).sort((a, b) => new Date(b.foundDate) - new Date(a.foundDate));
+
+  document.getElementById('tableHead').innerHTML = `<tr>
+    <th>${t('colId')}</th>
+    <th>${t('colDate')}</th>
+    <th>${t('colItem')}</th>
+    <th>${t('colLocation')}</th>
+    <th>${t('colStaff')}</th>
+    <th>${t('colStatus')}</th>
+    <th>${t('colDays')}</th>
+    <th>${t('colPhoto')}</th>
+    <th>${t('colAction')}</th>
+  </tr>`;
+
+  if (filtered.length === 0) {
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="9"><div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <div class="empty-text">${t('noItems')}</div>
+    </div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('tableBody').innerHTML = filtered.map(item => {
+    const days = Math.floor((new Date() - new Date(item.foundDate)) / 86400000);
+    let daysClass = 'days-ok';
+    if (days > 30) daysClass = 'days-danger';
+    else if (days > 14) daysClass = 'days-warn';
+
+    const badge = {
+      holding: `<span class="badge badge-holding">${t('statusHolding')}</span>`,
+      returned: `<span class="badge badge-returned">${t('statusReturned')}</span>`,
+      investigating: `<span class="badge badge-investigating">${t('statusInvestigating')}</span>`,
+      disposed: `<span class="badge badge-disposed">${t('statusDisposed')}</span>`,
+    }[item.status] || '';
+
+    const photo = item.photos && item.photos[0]
+      ? `<img class="photo-thumb" src="${item.photos[0]}" onclick="openLightbox('${item.photos[0]}')" alt="">`
+      : `<div class="no-photo" onclick="openEditModal('${item.id}')">+</div>`;
+
+    return `<tr>
+      <td class="id-cell">${item.id}</td>
+      <td>${item.foundDate || '—'}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.desc || '—'}</td>
+      <td>${item.location || '—'}</td>
+      <td>${item.staff || '—'}</td>
+      <td>${badge}</td>
+      <td><span class="days-old ${daysClass}">${days}${t('days')}</span></td>
+      <td>${photo}</td>
+      <td class="action-cell">
+        <button class="btn-sm" onclick="openEditModal('${item.id}')">${t('edit')}</button>
+        <button class="btn-sm danger" onclick="deleteItem('${item.id}')">${t('delete')}</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── MODAL ───────────────────────────────────────────────────
+function renderModalForm() {
+  const fStatus = document.getElementById('fStatus');
+  if (!fStatus) return;
+  fStatus.innerHTML = `
+    <option value="holding">${t('statusHolding')}</option>
+    <option value="investigating">${t('statusInvestigating')}</option>
+    <option value="returned">${t('statusReturned')}</option>
+    <option value="disposed">${t('statusDisposed')}</option>
+  `;
+  const fContact = document.getElementById('fContact');
+  if (fContact) {
+    fContact.innerHTML = `
+      <option value="none">${t('notContacted')}</option>
+      <option value="sent">${t('messageSent')}</option>
+      <option value="done">${t('completed')}</option>
+      <option value="unreachable">${t('unreachable')}</option>
+    `;
+  }
+  document.getElementById('modalTitle').textContent = editId ? t('edit') : t('addItem');
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+}
+
+function openAddModal() {
+  editId = null;
+  pendingPhotos = [];
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fBrand').value = '';
+  document.getElementById('fLocation').value = '6F Dorm';
+  document.getElementById('fStorage').value = '';
+  document.getElementById('fStaff').value = '';
+  document.getElementById('fResolved').value = '';
+  document.getElementById('fNotes').value = '';
+  renderModalForm();
+  document.getElementById('photoPreviews').innerHTML = '';
+  document.getElementById('fStatus').value = 'holding';
+  document.getElementById('fContact').value = 'none';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openEditModal(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  editId = id;
+  pendingPhotos = item.photos ? [...item.photos] : [];
+  renderModalForm();
+  document.getElementById('fDate').value = item.foundDate || '';
+  document.getElementById('fDesc').value = item.desc || '';
+  document.getElementById('fBrand').value = item.brand || '';
+  document.getElementById('fLocation').value = item.location || '6F Dorm';
+  document.getElementById('fStorage').value = item.storage || '';
+  document.getElementById('fStaff').value = item.staff || '';
+  document.getElementById('fStatus').value = item.status || 'holding';
+  document.getElementById('fContact').value = item.contact || 'none';
+  document.getElementById('fResolved').value = item.resolvedDate || '';
+  document.getElementById('fNotes').value = item.notes || '';
+  renderPhotoPreviews();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  pendingPhotos = [];
+  editId = null;
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+async function saveItem() {
+  const item = {
+    id: editId || 'L' + Date.now().toString(36).toUpperCase(),
+    foundDate: document.getElementById('fDate').value,
+    desc: document.getElementById('fDesc').value,
+    brand: document.getElementById('fBrand').value,
+    location: document.getElementById('fLocation').value,
+    storage: document.getElementById('fStorage').value,
+    staff: document.getElementById('fStaff').value,
+    status: document.getElementById('fStatus').value,
+    contact: document.getElementById('fContact').value,
+    resolvedDate: document.getElementById('fResolved').value,
+    notes: document.getElementById('fNotes').value,
+    photos: [...pendingPhotos],
+    _isNew: !editId,
+  };
+
+  if (SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    // demo mode — local only
+    if (editId) { const idx = items.findIndex(i => i.id === editId); if (idx !== -1) { delete item._isNew; items[idx] = item; } }
+    else { delete item._isNew; items.unshift(item); }
+    closeModal(); renderAll(); return;
+  }
+
+  try {
+    setLoading(true);
+    const action = item._isNew ? 'add' : 'update';
+    delete item._isNew;
+    const payload = { action, ...item, photos: JSON.stringify(item.photos) };
+    await apiCall(payload);
+    await loadItems();
+    closeModal();
+  } catch(e) {
+    showError('Save failed: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  if (SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    items = items.filter(i => i.id !== id); renderAll(); return;
+  }
+  try {
+    setLoading(true);
+    await apiCall({ action: 'delete', id });
+    await loadItems();
+  } catch(e) {
+    showError('Delete failed: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ─── PHOTOS ──────────────────────────────────────────────────
+function handleFiles(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingPhotos.push(ev.target.result);
+      renderPhotoPreviews();
+    };
+    reader.readAsDataURL(f);
+  });
+  e.target.value = '';
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.add('dragover');
+}
+function dragLeave() { document.getElementById('uploadArea').classList.remove('dragover'); }
+function dropFiles(e) {
+  e.preventDefault();
+  dragLeave();
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  files.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => { pendingPhotos.push(ev.target.result); renderPhotoPreviews(); };
+    reader.readAsDataURL(f);
+  });
+}
+
+function renderPhotoPreviews() {
+  document.getElementById('photoPreviews').innerHTML = pendingPhotos.map((src, i) => `
+    <div class="photo-preview-wrap">
+      <img src="${src}" alt="">
+      <button class="photo-remove" onclick="removePhoto(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removePhoto(i) {
+  pendingPhotos.splice(i, 1);
+  renderPhotoPreviews();
+}
+
+// ─── LIGHTBOX ────────────────────────────────────────────────
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+// ─── EXPORT CSV ──────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['ID','Found Date','Description','Brand/Color','Location','Staff','Status','Storage','Contact','Resolved Date','Notes'];
+  const rows = items.map(i => [
+    i.id, i.foundDate, i.desc, i.brand, i.location, i.staff,
+    i.status, i.storage, i.contact, i.resolvedDate, (i.notes||'').replace(/,/g,' ')
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `lost-items-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+// ─── SAMPLE DATA (demo mode only) ────────────────────────────
+function getSampleData() {
+  return [
+    { id:'L1A2B3', foundDate:'2025-04-10', desc:'USB-C Charger', brand:'White, no brand', location:'6F Dorm', storage:'Box A', staff:'Noon', status:'holding', contact:'none', resolvedDate:'', notes:'', photos:[] },
+    { id:'L2C3D4', foundDate:'2025-04-11', desc:'Korean Passport', brand:'Navy blue cover', location:'Lobby', storage:'Box A', staff:'Fah', status:'returned', contact:'done', resolvedDate:'2025-04-12', notes:'Guest picked up in person', photos:[] },
+    { id:'L3E4F5', foundDate:'2025-04-13', desc:'Sunglasses', brand:'Black, Ray-Ban', location:'Rooftop', storage:'Box B', staff:'Noon', status:'investigating', contact:'sent', resolvedDate:'', notes:'Booking BK-0892', photos:[] },
+    { id:'L4G5H6', foundDate:'2025-03-20', desc:'Travel pouch', brand:'Beige', location:'8F Dorm', storage:'', staff:'Fah', status:'disposed', contact:'unreachable', resolvedDate:'2025-04-13', notes:'Disposed after 30 days', photos:[] },
+  ];
+}
+
+// ─── INIT ────────────────────────────────────────────────────
+loadItems();
+</script>
+</body>
+</html>
